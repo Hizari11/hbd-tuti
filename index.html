@@ -184,24 +184,24 @@
     <canvas id="confetti-canvas"></canvas>
 
     <!-- Musik Latar Belakang -->
-    <!-- Catatan: Ganti URL src dengan link lagu 'biru.mp3' kamu jika ada -->
+    <!-- Disesuaikan untuk membaca file lokal di dalam folder music -->
     <audio id="bgMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        <source src="music/biru.mp3" type="audio/mpeg">
     </audio>
 
     <!-- SCREEN 1: Welcome/Cover -->
     <section id="screen0" class="screen active">
         <h1>👑 Tuti Kilaswari 👑</h1>
         <h2>Happy 22nd Birthday My Princess</h2>
-        <button onclick="startExperience()">Masuk ke Kerajaan Ulang Tahun ✨</button>
+        <button onclick="startExperience()">Coba Pencet Sayanggg ✨</button>
     </section>
 
     <!-- SCREEN 2: Galeri Foto -->
     <section id="screen1" class="screen">
         <h1>📸 Kenangan Kita</h1>
         <div class="gallery-container">
-            <!-- Menggunakan gambar placeholder, silakan ganti src dengan foto kalian -->
-            <img id="photo" src="https://picsum.photos/id/1025/350/400" alt="Kenangan">
+            <!-- Source awal langsung membaca file foto pertama di folder images -->
+            <img id="photo" src="images/foto1.jpg" alt="Kenangan">
         </div>
         <p id="caption" style="font-style: italic; margin-top: 5px;"></p>
         <p id="counter" style="font-size: 0.9rem; color: gray;"></p>
@@ -209,7 +209,7 @@
             <button class="nav-btn" onclick="prevPhoto()">⬅️</button>
             <button class="nav-btn" onclick="nextPhoto()">➡️</button>
         </div>
-        <button onclick="gotoLetter()">Baca Surat Mutiara 💌</button>
+        <button onclick="gotoLetter()">Ada Suratnya lohhh 💌</button>
     </section>
 
     <!-- SCREEN 3: Surat Berjalan -->
@@ -235,8 +235,8 @@
 
     <!-- SCREEN 5: Countdown Dinner -->
     <section id="screen4" class="screen">
-        <h1>⏳ Countdown Dinner</h1>
-        <h2>Menghitung mundur menuju waktu berharga kita:</h2>
+        <h1>⏳ Countdown </h1>
+        <h2>Hari kita ngerayain ulang tahunmu kali ini:</h2>
         <div id="countdown"></div>
         <button onclick="gotoFinal()">Lanjut ❤️</button>
     </section>
@@ -244,7 +244,7 @@
     <!-- SCREEN 6: Undangan Dinner -->
     <section id="screen5" class="screen">
         <h1>Tuti Kilaswari ❤️</h1>
-        <p style="font-size: 1.2rem; max-width: 500px; line-width: 1.5;">Maukah kamu dinner bersamaku pada tanggal 5 Juni pukul 19.00 WIB?</p>
+        <p style="font-size: 1.2rem; max-width: 500px; line-width: 1.5;">kamu mau ngga ngerayain pada tanggal 5 Juni pukul 19.00 WIB?</p>
         <div style="margin-top: 30px;">
             <button onclick="accept('mau')">❤️ Mau</button>
             <button onclick="accept('mau_banget')">💖 Mau Banget</button>
@@ -262,36 +262,26 @@
                 s.style.display = 'none';
             });
             screens[idx].style.display = 'flex';
-            // Trigger reflow untuk animasi smooth transition opacity
             setTimeout(() => {
                 screens[idx].classList.add('active');
             }, 50);
         }
 
         function startExperience() {
-            // Memutar musik
             const music = document.getElementById('bgMusic');
             music.play().catch(() => {
                 console.log("Autoplay musik diblokir oleh browser, akan berputar setelah interaksi lanjut.");
             });
-            // Mulai efek confetti
             initConfetti();
             show(1);
         }
 
-        // --- Fitur Galeri Foto ---
-        // Kamu bisa mengganti URL di bawah ini dengan path foto lokalmu (misal: 'images/foto1.jpg')
-        const photoUrls = [
-            "https://picsum.photos/id/1025/350/400",
-            "https://picsum.photos/id/1062/350/400",
-            "https://picsum.photos/id/103/350/400"
-        ];
+        // --- Fitur Galeri Foto Dinamis ---
+        // Jika total fotomu di folder images kurang atau lebih dari 18, ganti angka ini saja
+        const TOTAL_FOTO = 18; 
         
-        const captions = [
-            "Hari pertama kita berbagi senyum... 😊",
-            "Saat dunia terasa indah bersamamu... ✨",
-            "Satu dari sejuta momen berharga kita... ❤️"
-        ];
+        // Pembuatan urutan caption otomatis menyesuaikan dengan jumlah total foto
+        const captions = Array.from({length: TOTAL_FOTO}, (_, i) => `Kenangan indah #${i + 1} ❤️`);
 
         let photoIdx = 0;
         const photoEl = document.getElementById('photo');
@@ -299,19 +289,20 @@
         const counterEl = document.getElementById('counter');
 
         function renderGallery() {
-            photoEl.src = photoUrls[photoIdx];
+            // Membaca path secara relatif langsung ke folder images
+            photoEl.src = `images/foto${photoIdx + 1}.jpg`;
             captionEl.textContent = captions[photoIdx];
-            counterEl.textContent = `${photoIdx + 1} / ${photoUrls.length}`;
+            counterEl.textContent = `${photoIdx + 1} / ${TOTAL_FOTO}`;
         }
         renderGallery();
 
         function nextPhoto() {
-            photoIdx = (photoIdx + 1) % photoUrls.length;
+            photoIdx = (photoIdx + 1) % TOTAL_FOTO;
             renderGallery();
         }
 
         function prevPhoto() {
-            photoIdx = (photoIdx - 1 + photoUrls.length) % photoUrls.length;
+            photoIdx = (photoIdx - 1 + TOTAL_FOTO) % TOTAL_FOTO;
             renderGallery();
         }
 
@@ -338,9 +329,9 @@
                     el.scrollTop = el.scrollHeight; // Auto-scroll ke bawah saat mengetik
                 } else {
                     clearInterval(timer);
-                    buttonNext.style.display = 'inline-block'; // Tampilkan tombol lanjut setelah selesai mengetik
+                    buttonNext.style.display = 'inline-block'; // Tombol lanjut muncul setelah selesai mengetik
                 }
-            }, 30); // Kecepatan mengetik (milidetik per karakter)
+            }, 30); // Kecepatan mengetik ditingkatkan dari 100ms menjadi 30ms agar tidak terlalu lama menunggu
         }
 
         function gotoGift() {
@@ -368,8 +359,7 @@
         function accept(type) {
             const messageBox = document.getElementById('finalMessage');
             if(type === 'mau' || type === 'mau_banget') {
-                messageBox.innerHTML = '<h2>Yeay! ❤️</h2><p style="font-size:1.1rem;">Aku tidak sabar menghabiskan malam spesial itu bersamamu.<br><br>Sampai jumpa tanggal 5 Juni pukul 19.00 WIB, Princess-ku ✨<br><i>Love, Iza</i></p>';
-                // Berikan ledakan confetti ekstra
+                messageBox.innerHTML = '<h2>Yeay! ❤️</h2><p style="font-size:1.1rem;">Aku ga sabar sampai malam spesial itu tiba.<br><br>Sampai jumpa tanggal 5 Juni pukul 19.00 WIB, Princess-ku ✨<br><i>Love, Iza</i></p>';
                 for(let i=0; i<100; i++) {
                     confettiParticles.push(new ConfettiParticle());
                 }
