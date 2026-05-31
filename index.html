@@ -198,7 +198,7 @@
 
     <!-- SCREEN 2: Galeri Foto -->
     <section id="screen1" class="screen">
-        <h1>📸 Kenangan Kita</h1>
+        <h1>📸🤍 You look absolutely beautiful in this photo🤍📸</h1>
         <div class="gallery-container">
             <!-- Source awal langsung membaca file foto pertama di folder images -->
             <img id="photo" src="images/foto1.jpg" alt="Kenangan">
@@ -281,7 +281,7 @@
         const TOTAL_FOTO = 18; 
         
         // Pembuatan urutan caption otomatis menyesuaikan dengan jumlah total foto
-        const captions = Array.from({length: TOTAL_FOTO}, (_, i) => `Kenangan indah #${i + 1} ❤️`);
+        const captions = Array.from({length: TOTAL_FOTO}, (_, i) => `I Love U in every moment #${i + 1} ❤️`);
 
         let photoIdx = 0;
         const photoEl = document.getElementById('photo');
@@ -331,7 +331,7 @@
                     clearInterval(timer);
                     buttonNext.style.display = 'inline-block'; // Tombol lanjut muncul setelah selesai mengetik
                 }
-            }, 30); // Kecepatan mengetik ditingkatkan dari 100ms menjadi 30ms agar tidak terlalu lama menunggu
+            }, 100); // Kecepatan mengetik ditingkatkan dari 100ms menjadi 30ms agar tidak terlalu lama menunggu
         }
 
         function gotoGift() {
