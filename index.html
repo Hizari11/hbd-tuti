@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Princess Tuti's 22nd Birthday</title>
+    <style>
+        /* --- STYLE CSS --- */
+        :root {
+            --primary-color: #d4af37; /* Emas Kerajaan */
+            --bg-color: #fff5f8;      /* Pink Pastel Sangat Muda */
+            --text-color: #4a3728;    /* Cokelat Gelap Elegan */
+            --accent-color: #ffb6c1;  /* Pink Pastel Aksen */
+        }
+
+        body {
+            font-family: 'Georgia', 'Arial', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .screen {
+            display: none;
+            min-height: 100vh;
+            box-sizing: border-box;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            width: 100%;
+            top: 0;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            pointer-events: none;
+        }
+
+        .screen.active {
+            position: relative;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1rem;
+            border: 2px solid var(--primary-color);
+            background-color: white;
+            color: var(--text-color);
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+            transition: all 0.3s ease;
+            font-family: inherit;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Galeri Foto */
+        .gallery-container {
+            position: relative;
+            max-width: 350px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 20px;
+            border: 5px solid white;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .nav-buttons {
+            margin-top: 15px;
+            margin-bottom: 25px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            margin: 0 5px;
+            font-size: 1.2rem;
+        }
+
+        /* Surat Kontainer */
+        .letter-box {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid rgba(214, 175, 55, 0.3);
+            margin-bottom: 30px;
+        }
+
+        #letter {
+            white-space: pre-wrap;
+            text-align: left;
+            line-height: 1.6;
+            font-size: 1.05rem;
+            height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        /* Kotak Kado */
+        .gift-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .gift-btn {
+            font-size: 3rem;
+            padding: 20px;
+            background: white;
+            border: 2px dashed var(--primary-color);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .gift-btn:hover {
+            transform: scale(1.1);
+        }
+
+        #giftResult {
+            font-weight: bold;
+            margin-top: 15px;
+            height: 24px;
+        }
+
+        /* Countdown */
+        #countdown {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 20px 0 40px 0;
+            letter-spacing: 1px;
+        }
+
+        /* Canvas Confetti */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Efek Animasi Confetti -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Musik Latar Belakang -->
+    <!-- Catatan: Ganti URL src dengan link lagu 'biru.mp3' kamu jika ada -->
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- SCREEN 1: Welcome/Cover -->
+    <section id="screen0" class="screen active">
+        <h1>👑 Tuti Kilaswari 👑</h1>
+        <h2>Happy 22nd Birthday My Princess</h2>
+        <button onclick="startExperience()">Masuk ke Kerajaan Ulang Tahun ✨</button>
+    </section>
+
+    <!-- SCREEN 2: Galeri Foto -->
+    <section id="screen1" class="screen">
+        <h1>📸 Kenangan Kita</h1>
+        <div class="gallery-container">
+            <!-- Menggunakan gambar placeholder, silakan ganti src dengan foto kalian -->
+            <img id="photo" src="https://picsum.photos/id/1025/350/400" alt="Kenangan">
+        </div>
+        <p id="caption" style="font-style: italic; margin-top: 5px;"></p>
+        <p id="counter" style="font-size: 0.9rem; color: gray;"></p>
+        <div class="nav-buttons">
+            <button class="nav-btn" onclick="prevPhoto()">⬅️</button>
+            <button class="nav-btn" onclick="nextPhoto()">➡️</button>
+        </div>
+        <button onclick="gotoLetter()">Baca Surat Mutiara 💌</button>
+    </section>
+
+    <!-- SCREEN 3: Surat Berjalan -->
+    <section id="screen2" class="screen">
+        <h1>💌 Untuk Tuti</h1>
+        <div class="letter-box">
+            <div id="letter"></div>
+        </div>
+        <button id="nextFromLetter" onclick="gotoGift()" style="display:none;">Lanjut ✨</button>
+    </section>
+
+    <!-- SCREEN 4: Pilih Hadiah -->
+    <section id="screen3" class="screen">
+        <h1>🎁 Pilih Hadiah Spesialmu</h1>
+        <h2>Ada kejutan di salah satu kado ini!</h2>
+        <div class="gift-container">
+            <button class="gift-btn" onclick="gift(1)">🎁</button>
+            <button class="gift-btn" onclick="gift(2)">🎁</button>
+            <button class="gift-btn" onclick="gift(3)">🎁</button>
+        </div>
+        <p id="giftResult"></p>
+    </section>
+
+    <!-- SCREEN 5: Countdown Dinner -->
+    <section id="screen4" class="screen">
+        <h1>⏳ Countdown Dinner</h1>
+        <h2>Menghitung mundur menuju waktu berharga kita:</h2>
+        <div id="countdown"></div>
+        <button onclick="gotoFinal()">Lanjut ❤️</button>
+    </section>
+
+    <!-- SCREEN 6: Undangan Dinner -->
+    <section id="screen5" class="screen">
+        <h1>Tuti Kilaswari ❤️</h1>
+        <p style="font-size: 1.2rem; max-width: 500px; line-width: 1.5;">Maukah kamu dinner bersamaku pada tanggal 5 Juni pukul 19.00 WIB?</p>
+        <div style="margin-top: 30px;">
+            <button onclick="accept('mau')">❤️ Mau</button>
+            <button onclick="accept('mau_banget')">💖 Mau Banget</button>
+        </div>
+        <div id="finalMessage" style="margin-top: 40px;"></div>
+    </section>
+
+    <!-- --- JAVASCRIPT --- -->
+    <script>
+        const screens = [...document.querySelectorAll('.screen')];
+        
+        function show(idx) {
+            screens.forEach(s => {
+                s.classList.remove('active');
+                s.style.display = 'none';
+            });
+            screens[idx].style.display = 'flex';
+            // Trigger reflow untuk animasi smooth transition opacity
+            setTimeout(() => {
+                screens[idx].classList.add('active');
+            }, 50);
+        }
+
+        function startExperience() {
+            // Memutar musik
+            const music = document.getElementById('bgMusic');
+            music.play().catch(() => {
+                console.log("Autoplay musik diblokir oleh browser, akan berputar setelah interaksi lanjut.");
+            });
+            // Mulai efek confetti
+            initConfetti();
+            show(1);
+        }
+
+        // --- Fitur Galeri Foto ---
+        // Kamu bisa mengganti URL di bawah ini dengan path foto lokalmu (misal: 'images/foto1.jpg')
+        const photoUrls = [
+            "https://picsum.photos/id/1025/350/400",
+            "https://picsum.photos/id/1062/350/400",
+            "https://picsum.photos/id/103/350/400"
+        ];
+        
+        const captions = [
+            "Hari pertama kita berbagi senyum... 😊",
+            "Saat dunia terasa indah bersamamu... ✨",
+            "Satu dari sejuta momen berharga kita... ❤️"
+        ];
+
+        let photoIdx = 0;
+        const photoEl = document.getElementById('photo');
+        const captionEl = document.getElementById('caption');
+        const counterEl = document.getElementById('counter');
+
+        function renderGallery() {
+            photoEl.src = photoUrls[photoIdx];
+            captionEl.textContent = captions[photoIdx];
+            counterEl.textContent = `${photoIdx + 1} / ${photoUrls.length}`;
+        }
+        renderGallery();
+
+        function nextPhoto() {
+            photoIdx = (photoIdx + 1) % photoUrls.length;
+            renderGallery();
+        }
+
+        function prevPhoto() {
+            photoIdx = (photoIdx - 1 + photoUrls.length) % photoUrls.length;
+            renderGallery();
+        }
+
+        function gotoLetter() {
+            show(2);
+            typeLetter();
+        }
+
+        // --- Fitur Surat Mengetik Otomatis ---
+        let typed = false;
+        function typeLetter() {
+            if (typed) return;
+            typed = true;
+
+            const text = `Selamat Ulang Tahun ke-22 Sayanggggg❤️\n\nDear Tuti.\n\nHari ini adalah hari yang sangat spesial, karena 22 tahun yang lalu lahirlah seseorang yang berhasil mengubah hidupku menjadi lebih berwarna, lebih hangat, dan lebih berarti.\n\nSelamat ulang tahun yang ke-22, cintaku.\n\nAku bersyukur karena dari sekian banyak orang di dunia ini, aku dipertemukan denganmu. Kamu perempuan yang baik, penuh empati, ringan tangan membantu orang lain, dan selalu berusaha membuat orang-orang di sekitarmu merasa nyaman. Mungkin kamu tidak selalu menyadari betapa berharganya dirimu, tetapi aku melihatnya setiap hari.\n\nAku mencintai caramu tertawa saat menemukan sesuatu yang lucu. Aku mencintai caramu peduli kepada orang lain. Aku mencintai kelembutan hatimu, kesabaranmu, dan semua hal kecil yang membuatmu menjadi Tuti yang aku kenal dan aku sayang.\n\nDi 22 tahun ini, aku berharap kamu selalu diberikan kesehatan, kebahagiaan, dan kekuatan untuk menghadapi setiap langkah yang akan datang. Semoga semua impian yang sedang kamu perjuangkan satu per satu menemukan jalannya untuk menjadi kenyataan. Semoga kamu selalu dikelilingi oleh orang-orang yang menyayangimu dengan tulus, sebagaimana kamu menyayangi mereka.\n\nAku tahu hidup tidak selalu mudah. Akan ada hari-hari yang melelahkan, hari-hari yang membuatmu ragu, dan hari-hari ketika semuanya terasa berat. Namun aku ingin kamu tahu bahwa kamu tidak harus menghadapi semuanya sendirian. Aku akan selalu berusaha berada di sampingmu, mendengarkan ceritamu, merayakan kebahagiaanmu, dan menemanimu ketika dunia terasa terlalu ramai atau terlalu sunyi.\n\nTerima kasih karena sudah hadir dalam hidupku.\nTerima kasih karena sudah menjadi tempat pulang bagi segala cerita yang ingin kubagikan.\nTerima kasih karena sudah menjadi alasan mengapa banyak hariku terasa lebih indah.\n\nDi ulang tahunmu yang ke-22 ini, aku tidak hanya merayakan bertambahnya usiamu. Aku juga merayakan keberadaanmu—seseorang yang begitu berarti dalam hidupku.\n\nTetaplah menjadi perempuan baik hati yang selalu aku kagumi. Tetaplah menjadi dirimu sendiri, karena itulah versi dirimu yang paling aku cintai. *rill yah inih\n\nSelamat ulang tahun, sayangku cintaku princessku.\n\nAku mungkin tidak bisa menjanjikan hidup yang sempurna, tetapi aku akan selalu berusaha mencintaimu dengan sepenuh hati, hari ini, besok, dan selama aku masih diberi kesempatan untuk melakukannya.\n\nAku sayang banget sama kamu.\nAku juga bangga sama kamu.\nDan aku bersyukur karena memilikimu.\n\nDengan cinta yang tak pernah berkurang,\nIza ❤️`;
+
+            let i = 0;
+            const el = document.getElementById('letter');
+            const buttonNext = document.getElementById('nextFromLetter');
+            
+            const timer = setInterval(() => {
+                if (i < text.length) {
+                    el.textContent += text[i++];
+                    el.scrollTop = el.scrollHeight; // Auto-scroll ke bawah saat mengetik
+                } else {
+                    clearInterval(timer);
+                    buttonNext.style.display = 'inline-block'; // Tampilkan tombol lanjut setelah selesai mengetik
+                }
+            }, 30); // Kecepatan mengetik (milidetik per karakter)
+        }
+
+        function gotoGift() {
+            show(3);
+        }
+
+        // --- Fitur Game Tebak Kado ---
+        const winner = Math.floor(Math.random() * 3) + 1;
+        function gift(n) {
+            const result = document.getElementById('giftResult');
+            if (n === winner) {
+                result.style.color = "green";
+                result.textContent = 'Kamu menemukan kejutan spesial ❤️';
+                setTimeout(() => show(4), 1200);
+            } else {
+                result.style.color = "red";
+                result.textContent = 'Hehe, coba lagi kado yang lain 😋';
+            }
+        }
+
+        function gotoFinal() {
+            show(5);
+        }
+
+        function accept(type) {
+            const messageBox = document.getElementById('finalMessage');
+            if(type === 'mau' || type === 'mau_banget') {
+                messageBox.innerHTML = '<h2>Yeay! ❤️</h2><p style="font-size:1.1rem;">Aku tidak sabar menghabiskan malam spesial itu bersamamu.<br><br>Sampai jumpa tanggal 5 Juni pukul 19.00 WIB, Princess-ku ✨<br><i>Love, Iza</i></p>';
+                // Berikan ledakan confetti ekstra
+                for(let i=0; i<100; i++) {
+                    confettiParticles.push(new ConfettiParticle());
+                }
+            }
+        }
+
+        // --- Fitur Hitung Mundur (Waktu Target: 5 Juni 2026 pukul 19.00) ---
+        const targetDate = new Date('2026-06-05T19:00:00+07:00').getTime();
+        const countdownEl = document.getElementById('countdown');
+
+        setInterval(() => {
+            const now = Date.now();
+            const difference = targetDate - now;
+
+            if (difference < 0) {
+                countdownEl.textContent = "Waktunya Dinner Bersama! ❤️";
+                return;
+            }
+
+            const days = Math.floor(difference / 86400000);
+            const hrs = Math.floor((difference % 86400000) / 3600000);
+            const mins = Math.floor((difference % 3600000) / 60000);
+            const secs = Math.floor((difference % 60000) / 1000);
+
+            countdownEl.textContent = `${days} Hari ${hrs} Jam ${mins} Menit ${secs} Detik`;
+        }, 1000);
+
+        // --- Engine Efek Confetti (Pure JS Canvas) ---
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        let confettiParticles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class ConfettiParticle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * -canvas.height;
+                this.size = Math.random() * 8 + 5;
+                this.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = Math.random() * 3 + 2;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 4 - 2;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.rotation += this.rotationSpeed;
+                if (this.y > canvas.height) {
+                    this.y = -10;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation * Math.PI / 180);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size);
+                ctx.restore();
+            }
+        }
+
+        function initConfetti() {
+            for (let i = 0; i < 120; i++) {
+                confettiParticles.push(new ConfettiParticle());
+            }
+            animateConfetti();
+        }
+
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            confettiParticles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateConfetti);
+        }
+    </script>
+</body>
+</html>
